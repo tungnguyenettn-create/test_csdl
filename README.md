@@ -2,13 +2,13 @@
 
 ## 1. Connect to PostgreSQL (Windows)
 
-Với windows mở terminal và chạy:
+Với windows mở terminal TRONG THƯ MỤC NÀY và chạy:
 
 ```bash
 "C:\Program Files\PostgreSQL\15\bin\psql.exe" -U postgres
 ```
 
-Với ubuntu mở terminal và chạy:
+Với ubuntu mở terminal TRONG THƯ MỤC NÀY và chạy:
 ```bash
 sudo -u postgres psql
 ```
