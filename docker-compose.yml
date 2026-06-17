@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:15-alpine # Sử dụng bản alpine cho nhẹ
+    container_name: postgres_test_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ubuntu8s9reat
+      POSTGRES_DB: test # Tên database khởi tạo ban đầu
+    ports:
+      - "5432:5432"
+    volumes:
+      # Mount cả thư mục db-init vào thư mục tự động chạy của Docker
+      - ./db-init:/docker-entrypoint-initdb.d
+      # Lưu dữ liệu ở ổ cứng máy để nếu tắt docker đi bật lại không bị mất data
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
