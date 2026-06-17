@@ -1,28 +1,47 @@
-# Hệ Thống Quản Lý Giao Dịch Ngân Hàng (Banking Transaction System)
+# 🏦 Hệ Thống Quản Lý Giao Dịch Ngân Hàng (Banking Transaction System)
 
-Dự án này cung cấp một hệ thống cơ sở dữ liệu PostgreSQL hoàn chỉnh phục vụ cho các tính năng ngân hàng (chuyển khoản nội bộ, liên ngân hàng, thanh toán hóa đơn, nộp/rút tiền mặt) cùng mã nguồn Java JDBC kết nối xử lý giao dịch.
+Dự án triển khai hệ thống cơ sở dữ liệu PostgreSQL cho các nghiệp vụ ngân hàng (Chuyển khoản nội bộ, liên ngân hàng, thanh toán hóa đơn, nộp/rút tiền mặt) kết nối với mã nguồn xử lý giao dịch bằng Java JDBC.
 
-Hệ thống sử dụng **Docker** để tự động hóa quá trình cài đặt cơ sở dữ liệu, giúp khởi chạy toàn bộ schema, hàm (functions), thủ tục (stored procedures) và dữ liệu mẫu (sample data) chỉ với một câu lệnh duy nhất mà không cần cài đặt PostgreSQL thủ công trên máy.
+Hệ thống sử dụng **Docker** để tự động hóa môi trường. Toàn bộ cấu trúc bảng (Schema), hàm (Functions), thủ tục (Procedures) và dữ liệu mẫu (Sample Data) sẽ được tự động cài đặt và cấu hình chỉ với một câu lệnh duy nhất.
 
 ---
 
-## 🛠️ Yêu Cầu Hệ Thống
-
-Trước khi bắt đầu, hãy đảm bảo máy tính của bạn đã cài đặt các công cụ sau:
+## 🛠️ Yêu Cầu Cài Đặt
 * **Docker** & **Docker Compose**
 * **Java Development Kit (JDK) 17** hoặc mới hơn
-* Một IDE bất kỳ (khuyên dùng **IntelliJ IDEA**)
+* IDE: **IntelliJ IDEA** (khuyên dùng)
 
 ---
 
 ## 🚀 Hướng Dẫn Khởi Chạy Cơ Sở Dữ Liệu (Docker)
 
-Hệ thống hỗ trợ chạy mượt mà trên cả **Ubuntu (Linux)** và **Windows**. Vui lòng chọn hướng dẫn phù hợp với hệ điều hành của bạn dưới đây:
+Vui lòng chọn hướng dẫn theo hệ điều hành bạn đang sử dụng:
 
-### 🐧 Trên Ubuntu / Linux
+### 1. Trên Ubuntu / Linux 🐧
+* **Bước 1 (Quan trọng):** Tắt dịch vụ PostgreSQL cài trực tiếp trên máy (nếu có) để tránh xung đột cổng `5432` kết hợp với vào quyền admin:
+  ```bash
+  sudo systemctl stop postgresql
+  sudo systemctl disable postgresql
+  sudo su 
+  ``` 
+* **Bước 2** Mở Terminal tại thư mục gốc của dự án (nơi có file `docker-compose.yml`) và chạy: 
+``` bash 
+  docker compose up -d 
+```
+* **Bước 3** Kiểm tra container đã hoạt động hay chưa 
+``` bash
+  docker ps
+```
 
-1. **Chuẩn bị và dọn dẹp cổng (Nếu có):**
-   Nếu máy của bạn đang cài sẵn PostgreSQL chạy trực tiếp, hãy tắt nó đi để giải phóng cổng `5432`:
-   ```bash
-   sudo systemctl stop postgresql
-   sudo systemctl disable postgresql
+### 2. Trên Windows 🪟
+
+* **Bước 1** Bật ứng dụng docker desktop lên 
+* **Bước 2** Mở powershell/git bash ở thư mục của dự án và chạy 
+```bash 
+  docker-compose up -d 
+```
+hoặc 
+```bash 
+  docker compose up -d 
+```
+
