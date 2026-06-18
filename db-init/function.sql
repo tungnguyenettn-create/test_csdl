@@ -56,6 +56,99 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION fn_get_account_history_daily(
+    p_account_id VARCHAR(255)
+)
+RETURNS TABLE (
+    period_label TEXT,          -- Trả về định dạng 'YYYY-MM-DD'
+    total_inflow NUMERIC(22,3),
+    total_outflow NUMERIC(22,3),
+    net_change NUMERIC(22,3),
+    transaction_count BIGINT
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH raw_transactions AS (
+        SELECT 
+            t.trans_time,
+            CASE
+                WHEN dep.trans_id IS NOT NULL THEN t.trans_amount
+                WHEN ibt.destination_account_id = p_account_id THEN t.trans_amount
+                ELSE -t.trans_amount
+            END AS amount_change
+        FROM 
+            trans t
+        LEFT JOIN deposit dep ON t.trans_id = dep.trans_id
+        LEFT JOIN in_bank_trans ibt ON t.trans_id = ibt.trans_id
+        WHERE 
+            (t.affected_account_id = p_account_id OR ibt.destination_account_id = p_account_id)
+            -- Lọc cứng 7 ngày qua
+            AND t.trans_time >= NOW() - INTERVAL '7 days'
+    )
+    SELECT 
+        TO_CHAR(raw_transactions.trans_time, 'YYYY-MM-DD') AS period_label,
+        COALESCE(SUM(CASE WHEN raw_transactions.amount_change > 0 THEN raw_transactions.amount_change ELSE 0 END), 0)::NUMERIC(22,3) AS total_inflow,
+        COALESCE(SUM(CASE WHEN raw_transactions.amount_change < 0 THEN ABS(raw_transactions.amount_change) ELSE 0 END), 0)::NUMERIC(22,3) AS total_outflow,
+        COALESCE(SUM(raw_transactions.amount_change), 0)::NUMERIC(22,3) AS net_change,
+        COUNT(*)::BIGINT AS transaction_count
+    FROM 
+        raw_transactions
+    GROUP BY 
+        1
+    ORDER BY 
+        1 DESC;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION fn_get_account_history_monthly(
+    p_account_id VARCHAR(255)
+)
+RETURNS TABLE (
+    period_label TEXT,          -- Trả về định dạng 'YYYY-MM'
+    total_inflow NUMERIC(22,3),
+    total_outflow NUMERIC(22,3),
+    net_change NUMERIC(22,3),
+    transaction_count BIGINT
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH raw_transactions AS (
+        SELECT 
+            t.trans_time,
+            CASE
+                WHEN dep.trans_id IS NOT NULL THEN t.trans_amount
+                WHEN ibt.destination_account_id = p_account_id THEN t.trans_amount
+                ELSE -t.trans_amount
+            END AS amount_change
+        FROM 
+            trans t
+        LEFT JOIN deposit dep ON t.trans_id = dep.trans_id
+        LEFT JOIN in_bank_trans ibt ON t.trans_id = ibt.trans_id
+        WHERE 
+            (t.affected_account_id = p_account_id OR ibt.destination_account_id = p_account_id)
+            -- Lọc cứng 1 năm qua
+            AND t.trans_time >= NOW() - INTERVAL '1 year'
+    )
+    SELECT 
+        TO_CHAR(raw_transactions.trans_time, 'YYYY-MM') AS period_label,
+        COALESCE(SUM(CASE WHEN raw_transactions.amount_change > 0 THEN raw_transactions.amount_change ELSE 0 END), 0)::NUMERIC(22,3) AS total_inflow,
+        COALESCE(SUM(CASE WHEN raw_transactions.amount_change < 0 THEN ABS(raw_transactions.amount_change) ELSE 0 END), 0)::NUMERIC(22,3) AS total_outflow,
+        COALESCE(SUM(raw_transactions.amount_change), 0)::NUMERIC(22,3) AS net_change,
+        COUNT(*)::BIGINT AS transaction_count
+    FROM 
+        raw_transactions
+    GROUP BY 
+        1
+    ORDER BY 
+        1 DESC;
+END;
+$$;
+
+
 CREATE OR REPLACE FUNCTION fn_in_bank_transfer(
     p_source_account_id      VARCHAR(255),
     p_destination_account_id VARCHAR(255),
