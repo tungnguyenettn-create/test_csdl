@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from customer import customer_bp
 from transfers import transfers_bp
 from history import history_bp
-from info import info_bp
+#from info import info_bp
 
 app = Flask(__name__)
 
@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.register_blueprint(customer_bp)
 app.register_blueprint(transfers_bp)
 app.register_blueprint(history_bp)
-app.register_blueprint(info_bp)
+#app.register_blueprint(info_bp)
 
 @app.route('/')
 def home():

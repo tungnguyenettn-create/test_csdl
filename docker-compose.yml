@@ -16,5 +16,19 @@ services:
       # Lưu dữ liệu ở ổ cứng máy để nếu tắt docker đi bật lại không bị mất data
       - postgres_data:/var/lib/postgresql/data
 
+  flask_backend:
+    build: . # Docker sẽ tự tìm file Dockerfile ở cùng thư mục để build
+    container_name: flask_test_container
+    ports:
+      - "5000:5000" # Kéo port 5000 ra ngoài máy thật như bạn muốn
+    volumes:
+      - .:/app # Mount code từ máy thật vào container để khi bạn sửa code không cần build lại
+    environment:
+      - FLASK_ENV=development
+      # Cách để Flask kết nối với Postgres (Sử dụng tên service làm host)
+      - DATABASE_URL=postgresql://postgres:ubuntu8s9reat@postgres_db:5432/test
+    depends_on:
+      - postgres_db # Chờ container postgres chạy trước rồi mới bật Flask
+
 volumes:
   postgres_data:
