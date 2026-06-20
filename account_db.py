@@ -133,7 +133,6 @@ def get_metadata(account):
     finally:
         conn.close()
     return None
-
 def update_password(account, new_password):
     """Dịch từ updatePassword() của Java. Lưu ý phải có conn.commit() khi UPDATE/INSERT"""
     conn = db.get_db_connection()
@@ -146,10 +145,12 @@ def update_password(account, new_password):
             
             conn.commit() # Xác nhận thay đổi dữ liệu vào Postgres
             
+            # Kiểm tra xem có dòng nào được cập nhật không
             if cur.rowcount > 0:
+                # ĐÃ XÓA dòng cur.fetchall() gây lỗi ở đây
                 return 1 # Thành công
             else:
-                return 0 # Không tìm thấy account thích hợp
+                return 0 # Không tìm thấy account thích hợp hoặc tài khoản đã bị đóng
     except Exception as e:
         print(f"Database error while updating password: {e}")
         conn.rollback() # Hoàn tác nếu lỗi

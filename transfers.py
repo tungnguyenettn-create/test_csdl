@@ -1,14 +1,14 @@
-# transfers_bp.py
 from flask import Blueprint, request, jsonify
 from auth import token_required  # Tái sử dụng tấm khiên bảo mật từ file auth.py của bạn
 import transfer_db
+from decimal import Decimal
 
 transfers_bp = Blueprint('transfers', __name__)
 
-# API CHUYỂN TIỀN NỘI BỘ THỰC TẾ
-@transfers_bp.route('/api/customer/transfer', methods=['POST'])
+# 1. API CHUYỂN TIỀN NỘI BỘ (Đã hoàn thiện)
+@transfers_bp.route('/api/transfers/in_bank_transfer', methods=['POST'])
 @token_required
-def transfer(current_user): # current_user chính là tài khoản nguồn lấy tự động từ Token
+def in_bank_transfer(current_user): # current_user chính là tài khoản nguồn lấy tự động từ Token
     data = request.get_json()
     dest_acc = data.get("dest_account")
     amount = data.get("amount")
@@ -19,7 +19,7 @@ def transfer(current_user): # current_user chính là tài khoản nguồn lấy
         return jsonify({"status": "error", "message": "Vui lòng nhập tài khoản đích và số tiền!"}), 400
         
     try:
-        amount_numeric = float(amount)
+        amount_numeric = Decimal(amount)
     except ValueError:
         return jsonify({"status": "error", "message": "Số tiền không hợp lệ!"}), 400
 
@@ -43,56 +43,105 @@ def transfer(current_user): # current_user chính là tài khoản nguồn lấy
             "message": message
         }), 400
 
-# API LẤY DANH SÁCH NGÂN HÀNG HỖ TRỢ (GET)
-@transfers_bp.route('/api/customer/supported-banks', methods=['GET'])
+
+# 2. API CHUYỂN TIỀN LIÊN NGÂN HÀNG (Sửa lỗi & Hoàn thiện)
+@transfers_bp.route('/api/transfers/out_bank_transfer', methods=['POST']) # Thêm dấu / ở đầu route
+@token_required 
+def out_bank_transfer(current_user): 
+    data = request.get_json() 
+    desc_bank = data.get("desc_bank") 
+    desc_acc = data.get("desc_acc") 
+    amount = data.get("amount") 
+    description = data.get("description", f"Chuyen khoan lien ngan hang tu {current_user}") 
+
+    if not desc_acc or not amount or not desc_bank: 
+        return jsonify({"status": "error", "message": "Vui lòng nhập tài khoản đích, ngân hàng và số tiền!"}), 400
+    
+    try: 
+        amount_numeric = Decimal(amount) 
+    except ValueError: 
+        return jsonify({"status": "error", "message": "Số tiền không hợp lệ!"}), 400
+
+    # Lấy ID ngân hàng từ tên ngân hàng người dùng truyền lên
+    bank_id = transfer_db.get_bank_id_from_bank_name(desc_bank) 
+    if bank_id is None:
+        return jsonify({"status": "error", "message": "Ngân hàng đích không được hỗ trợ!"}), 400
+
+    # Gọi hàm xử lý từ transfer_db (đã sửa lỗi gọi sai transfer.db) và truyền amount_numeric
+    result_code = transfer_db.out_bank_transfer(current_user, bank_id, amount_numeric, description) 
+    message = transfer_db.get_result_message(result_code)
+
+    if result_code == 1:
+        return jsonify({
+            "status": "success",
+            "result_code": result_code,
+            "message": message,
+            "detail": f"Tài khoản {current_user} đã chuyển thành công {amount_numeric} VNĐ đến STK {desc_acc} tại ngân hàng {desc_bank}."
+        }), 200
+    else:
+        return jsonify({
+            "status": "error",
+            "result_code": result_code,
+            "message": message
+        }), 400
+
+
+# 3. API LẤY DANH SÁCH NGÂN HÀNG HỖ TRỢ (Đã hoàn thiện)
+@transfers_bp.route('/api/transfers/supported-banks', methods=['GET'])
 @token_required
 def get_banks(current_user):
     banks = transfer_db.get_supported_bank()
     return jsonify({"status": "success", "banks": banks}), 200
 
 
-# transfer_db.py (Dán thêm vào cuối file)
+# 4. API THANH TOÁN HÓA ĐƠN (Viết mới hoàn thiện)
+@transfers_bp.route('/api/transfers/pay-bill', methods=['POST'])
+@token_required
+def pay_bill(current_user):
+    data = request.get_json()
+    provider_name = data.get("provider_name") # Ví dụ: 'EVN Hà Nội'
+    amount = data.get("amount")
 
-def get_bill_provider_id_from_name(provider_name):
-    """Lấy bill_provider_id từ tên nhà cung cấp (ví dụ: 'EVN Hà Nội')"""
-    conn = db.get_db_connection()
-    if not conn:
-        return None
+    if not provider_name or not amount:
+        return jsonify({"status": "error", "message": "Vui lòng cung cấp tên nhà cung cấp và số tiền thanh toán!"}), 400
+
     try:
-        with conn.cursor() as cur:
-            query = "SELECT bill_provider_id FROM bill_provider_supported WHERE bill_provider_name = %s"
-            cur.execute(query, (provider_name,))
-            row = cur.fetchone()
-            return row[0] if row else None
-    except Exception as e:
-        print(f"Error fetching bill provider ID for name {provider_name}: {e}")
-        return None
-    finally:
-        conn.close()
+        amount_numeric = Decimal(amount)
+    except ValueError:
+        return jsonify({"status": "error", "message": "Số tiền không hợp lệ!"}), 400
+
+    # Tìm ID của nhà cung cấp từ tên nhà cung cấp dịch vụ
+    bill_provider_id = transfer_db.get_bill_provider_id_from_name(provider_name)
+    if bill_provider_id is None:
+        return jsonify({"status": "error", "message": "Nhà cung cấp dịch vụ không tồn tại hoặc không được hỗ trợ!"}), 400
+
+    # Tiến hành gọi hàm thanh toán hóa đơn trong DB
+    result_code = transfer_db.pay_bill(current_user, bill_provider_id, amount_numeric)
+    message = transfer_db.get_result_message(result_code)
+
+    if result_code == 1:
+        return jsonify({
+            "status": "success",
+            "result_code": result_code,
+            "message": message,
+            "detail": f"Tài khoản {current_user} đã thanh toán hóa đơn thành công số tiền {amount_numeric} VNĐ cho {provider_name}."
+        }), 200
+    else:
+        return jsonify({
+            "status": "error",
+            "result_code": result_code,
+            "message": message
+        }), 400
 
 
-def get_supported_bill_provider(bill_type_name):
-    """Lấy danh sách tên nhà cung cấp theo loại hóa đơn (Ví dụ: 'Điện', 'Nước')"""
-    conn = db.get_db_connection()
-    result = []
-    if not conn:
-        return result
-    try:
-        with conn.cursor() as cur:
-            # Bước 1: Tìm bill_id từ tên loại hóa đơn
-            type_query = "SELECT bill_id FROM bill_type_supported WHERE bill_type_name = %s"
-            cur.execute(type_query, (bill_type_name,))
-            row = cur.fetchone()
-            
-            # Bước 2: Nếu tìm thấy bill_id, đi lấy danh sách nhà cung cấp
-            if row:
-                bill_id = row[0]
-                provider_query = "SELECT bill_provider_name FROM bill_provider_supported WHERE bill_id = %s"
-                cur.execute(provider_query, (bill_id,))
-                rows = cur.fetchall()
-                result = [r[0] for r in rows] # Chuyển mảng tuple thành mảng string đơn giản
-    except Exception as e:
-        print(f"Error fetching bill providers for type {bill_type_name}: {e}")
-    finally:
-        conn.close()
-    return result
+# 5. API BỔ SUNG: LẤY DANH SÁCH NHÀ CUNG CẤP THEO LOẠI HÓA ĐƠN (GET)
+@transfers_bp.route('/api/transfers/supported-bill-providers', methods=['GET'])
+@token_required
+def get_bill_providers(current_user):
+    # Lấy thông tin loại hóa đơn từ Query Parameter (Ví dụ: /api/transfers/supported-bill-providers?bill_type=Điện)
+    bill_type_name = request.args.get("bill_type")
+    if not bill_type_name:
+        return jsonify({"status": "error", "message": "Vui lòng truyền tham số loại hóa đơn (bill_type)!"}), 400
+
+    providers = transfer_db.get_supported_bill_provider(bill_type_name)
+    return jsonify({"status": "success", "bill_type": bill_type_name, "providers": providers}), 200

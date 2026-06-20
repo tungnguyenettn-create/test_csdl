@@ -69,3 +69,18 @@ def change_password(current_user):
         return jsonify({"status": "success", "message": "Đổi mật khẩu thành công!"}), 200
     else:
         return jsonify({"status": "error", "message": "Lỗi hệ thống không thể đổi mật khẩu"}), 500
+
+
+
+#5 API quen tai khoan 
+@customer_bp.route('/api/customer/forget-account', methods=['GET']) 
+def forget_account(): 
+    data = request.get_json() 
+    identity_card = data.get('identiy-card') 
+    if not identity_card:
+        return jsonify({
+            "status": "error",
+            "message": "Vui long nhap dung identity card" 
+        }) 
+    result = account_db.get_account_from_user(identity_card) 
+    return result 
