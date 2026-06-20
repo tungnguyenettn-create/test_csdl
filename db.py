@@ -3,11 +3,11 @@ import psycopg2
 
 # Cấu hình kết nối tới PostgreSQL đang chạy trong Docker của bạn
 DB_CONFIG = {
-    "host": "localhost",        # Docker map port ra máy thật nên vẫn là localhost
-    "port": 5432,               # Cổng của Postgres trong Docker đã map ra ngoài
-    "database": "test",         # Tên database của bạn
-    "user": "postgres",         # Tài khoản
-    "password": "ubuntu8s9reat" # Mật khẩu bạn đã thiết lập
+    "host": "postgres_test_container",        # Docker map port ra máy thật nên vẫn là localhost
+    "port": 5432,                             # Cổng của Postgres trong Docker đã map ra ngoài
+    "database": "test",                       # Tên database của bạn
+    "user": "postgres",                       # Tài khoản
+    "password": "ubuntu8s9reat"               # Mật khẩu bạn đã thiết lập
 }
 
 def get_db_connection():

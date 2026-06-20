@@ -2,7 +2,7 @@ import requests
 import json
 
 # Thay đổi URL này nếu bạn chạy Flask ở cổng (port) khác
-BASE_URL = "http://127.0.0.1:5000" 
+BASE_URL = "https://citation-spinal-freebase.ngrok-free.dev/" 
 
 # Biến toàn cục để lưu Token sau khi đăng nhập thành công
 TOKEN = ""
