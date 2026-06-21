@@ -1,0 +1,40 @@
+@media {
+    html {
+        background-color: #ffffff; 
+    }
+    
+    body {
+        background: transparent !important;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://i.pinimg.com/1200x/ee/26/fe/ee26fe3a94febbbac011ed6ee677ba7f.jpg') no-repeat center center;
+        background-size: cover;
+        opacity: 0.35;
+        z-index: -1;
+        pointer-events: none;
+    }
+}
+@media (max-width: 375px) {
+    .navbar {
+        flex-direction: column;
+        gap: 3px;
+        padding: 5px !important;
+    }
+    
+    .nav-links {
+        width: 75%;
+        flex-wrap: wrap; 
+        justify-content: space-between;
+        align-items: center;
+        margin: 0;
+        padding: 2px;
+        gap: 5px;
+    }
+}

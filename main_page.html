@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>36Bank - Home</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="main_page.css">
+</head>
+<!-- Gradient applied directly to body via inline style for high priority -->
+<body style="background: linear-gradient(135deg, #edf1f5 0%, #f8fafc 50%, #e2e8f0 100%); background-attachment: fixed; min-height: 100vh; margin: 0;">
+    
+    <nav class="navbar">
+        <a href="main_page.html" class="nav-logo">36Bank</a>
+        <ul class="nav-links">
+            <li><a href="news.html">News</a></li>
+            <li><a href="branchs.html">Branches</a></li>
+            <li><a href="user_profile.html">Profile</a></li>
+            <li><a href="login.html" id="loginBtn" class="btn-primary">LOGIN</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="header-section">
+            <div>
+                <h1 style="margin: 0;">GOOD MORNING,</h1>
+                <h1 style="margin: 0;">DUONG PHAN QUANG BACH</h1>
+            </div>
+            <!-- Cleaned up balance display -->
+            <div id="balanceDisplay" style="display: none; padding: 12px 32px; background-color: rgba(232, 234, 241, 0.8); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 24px; font-weight: bold; font-size: 24px; color: var(--text-primary); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                $5,432.00
+            </div>
+        </div>
+        
+        <div class="grid-icons">
+            <a href="transfer.html" class="icon-item">
+                <div class="icon-box">
+                    <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m8 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                </div>
+                <h4>MONEY TRANSFER</h4>
+            </a>
+            <a href="show_history.html" class="icon-item">
+                <div class="icon-box">
+                    <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <h4>SHOW HISTORY</h4>
+            </a>
+            <a href="bill_type.html" class="icon-item">
+                <div class="icon-box">
+                    <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <h4>PAY BILL</h4>
+            </a>
+            <a href="summary.html" class="icon-item">
+                <div class="icon-box">
+                    <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                </div>
+                <h4>SUMMARY</h4>
+            </a>
+            <a href="#" class="icon-item">
+                <div class="icon-box">
+                    <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg>
+                </div>
+                <h4>EXPLORE</h4>
+            </a>
+            <a href="#" class="icon-item">
+                <div class="icon-box">
+                    <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h6v6h-6z"/></svg>
+                </div>
+                <h4>MY QR</h4>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('logged_in') === 'true') {
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('balanceDisplay').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>

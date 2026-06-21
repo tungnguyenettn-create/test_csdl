@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>36Bank - User Profile</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="user_profile.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="main_page.html" class="nav-logo">36Bank</a>
+        <ul class="nav-links">
+            <li><a href="news.html">News</a></li>
+            <li><a href="branchs.html">Branches</a></li>
+            <li><a href="user_profile.html">Profile</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+            <a href="user_profile.html" class="btn-primary">User Information</a>
+            <a href="account_profile.html" class="btn-secondary">Account Information</a>
+        </div>
+        <div class="card">
+            <h2>User Profile</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                    <label>Full Name</label>
+                    <input type="text" value="John Doe" readonly style="background: var(--bg-alt);">
+                </div>
+                <div>
+                    <label>Email</label>
+                    <input type="email" value="john.doe@example.com" readonly style="background: var(--bg-alt);">
+                </div>
+                <div>
+                    <label>Phone</label>
+                    <input type="text" value="+1 234 567 890" readonly style="background: var(--bg-alt);">
+                </div>
+                <div>
+                    <label>Address</label>
+                    <input type="text" value="123 Bank St, City" readonly style="background: var(--bg-alt);">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,202 @@
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    margin-bottom: 64px;
+    opacity: 0.8;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.header-section h1 {
+    font-size: 36px;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.grid-icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.icon-item {
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.icon-box {
+    width: 120px;
+    height: 120px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 200ms ease;
+    color: var(--accent-primary);
+}
+
+.icon-item:hover .icon-box,
+.icon-item:focus .icon-box {
+    transform: translateY(-8px);
+    background-color: var(--accent-primary);
+    color: #FFFFFF;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.icon-item h4 {
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 600px) {
+    .header-section h1 {
+        font-size: 28px;
+    }
+    .grid-icons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    .icon-box {
+        width: 100px;
+        height: 100px;
+    }
+    .icon-box svg {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+.icon-box {
+    background-color: rgba(232, 234, 241, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.icon-item:hover .icon-box {
+    background-color: var(--accent-primary);
+    backdrop-filter: none;
+}
+
+body {
+    background: linear-gradient(180deg, #ffffff 0%, #eaeaf0 40%, #dcdfe0 100%) !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    margin: 0 !important;
+    min-height: 100vh !important;
+}
+
+.glass-side-panel .icon-box {
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+#loginBtn {
+    padding: 12px 48px;
+    border-radius: 24px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+@media (max-width: 600px) {
+    #loginBtn {
+        padding: 8px 24px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        gap: 3px;
+        padding: 5px !important;
+    }
+    
+    .nav-links {
+        width: 75%;
+        flex-wrap: wrap; 
+        justify-content: space-between;
+        align-items: center;
+        margin: 0;
+        padding: 2px;
+        gap: 5px;
+    }
+}
+
+@media (max-width: 600px) {
+    html {
+        background-color: #ffffff; 
+    }
+    
+    body {
+        background: transparent !important;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://i.pinimg.com/1200x/81/07/da/8107da2fe1dc4ab53f54f85e436e50e1.jpg') no-repeat center center;
+        background-size: cover;
+        opacity: 0.25;
+        z-index: -1;
+        pointer-events: none;
+    }
+}
+
+@media (min-width: 600px) {
+    html {
+        background-color: #ffffff; 
+    }
+    
+    body {
+        background: transparent !important;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://i.pinimg.com/1200x/c9/91/f1/c991f1a7440e196560c0116cdb00d55d.jpg') no-repeat center center;
+        background-size: cover;
+        opacity: 0.35;
+        z-index: -1;
+        pointer-events: none;
+    }
+}
+body::after {
+    content: "IMAGE SOURCE: Words Bubble Up Like Soda Pop - Kyōhei Ishiguro";
+    position: fixed;
+    bottom: 1px;
+    left: 10px;
+    font-size: 10px;
+    font-weight: 300;
+    color: #31456e;
+    opacity: 0.2;
+    z-index: 100;
+    pointer-events: none;
+}
+

@@ -1,0 +1,69 @@
+/* Bill Type Styles */
+.bill-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.card {
+    background-color: rgba(232, 234, 241, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 200ms ease;
+    cursor: pointer;
+    text-align: center;
+}
+/* Remove underline from links wrapping the cards */
+.bill-type-grid a {
+    text-decoration: none;
+    color: inherit; /* Ensures the text color stays consistent */
+}
+
+.card:hover, .card:focus {
+    transform: translateY(-8px);
+    background-color: var(--accent-primary);
+    color: #FFFFFF;
+    border-color: var(--accent-primary);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    backdrop-filter: none;
+}
+
+.card:hover h3, .card:hover p {
+    color: #FFFFFF;
+}
+@media {
+    html {
+        background-color: #ffffff; 
+    }
+    
+    body {
+        background: transparent !important;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://i.pinimg.com/1200x/c9/91/f1/c991f1a7440e196560c0116cdb00d55d.jpg') no-repeat center center;
+        background-size: cover;
+        opacity: 0.35;
+        z-index: -1;
+        pointer-events: none;
+    }
+}
+body::after {
+    content: "IMAGE SOURCE: Words Bubble Up Like Soda Pop - Kyōhei Ishiguro";
+    position: fixed;
+    bottom: 1px;
+    left: 10px;
+    font-size: 10px;
+    font-weight: 300;
+    color: #31456e;
+    opacity: 0.2;
+    z-index: 100;
+    pointer-events: none;
+}

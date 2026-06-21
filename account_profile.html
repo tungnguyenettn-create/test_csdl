@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>36Bank - Account Profile</title>
+    <link rel="stylesheet" href="shared.css">
+    <link rel="stylesheet" href="account_profile.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="main_page.html" class="nav-logo">36Bank</a>
+        <ul class="nav-links">
+            <li><a href="news.html">News</a></li>
+            <li><a href="branchs.html">Branches</a></li>
+            <li><a href="user_profile.html">Profile</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+            <a href="user_profile.html" class="btn-secondary">User Information</a>
+            <a href="account_profile.html" class="btn-primary">Account Information</a>
+        </div>
+        <div class="card">
+            <h2>Account Profile</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                    <label>Account Number</label>
+                    <input type="text" value="XXXX-XXXX-XXXX-1234" readonly style="background: var(--bg-alt);">
+                </div>
+                <div>
+                    <label>Account Type</label>
+                    <input type="text" value="Checking" readonly style="background: var(--bg-alt);">
+                </div>
+                <div>
+                    <label>Current Balance</label>
+                    <input type="text" value="$5,432.00" readonly style="background: var(--bg-alt); font-weight: bold;">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
