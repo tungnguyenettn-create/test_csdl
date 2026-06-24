@@ -137,7 +137,7 @@ def get_supported_bill_provider(bill_type_name):
     try:
         with conn.cursor() as cur:
             # Bước 1: Tìm bill_id từ tên loại hóa đơn
-            type_query = "SELECT bill_id FROM bill_type_supported WHERE bill_type_name = %s"
+            type_query = "SELECT bill_id FROM bill_type_supported WHERE bill_type = %s"
             cur.execute(type_query, (bill_type_name,))
             row = cur.fetchone()
             

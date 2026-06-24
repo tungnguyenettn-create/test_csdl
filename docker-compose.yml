@@ -11,10 +11,17 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      # Mount cả thư mục db-init vào thư mục tự động chạy của Docker
       - ./db-init:/docker-entrypoint-initdb.d
-      # Lưu dữ liệu ở ổ cứng máy để nếu tắt docker đi bật lại không bị mất data
       - postgres_data:/var/lib/postgresql/data
+
+  # --- THÊM REDIS VÀO ĐÂY ---
+  redis_cache:
+    image: redis:alpine # Bản alpine siêu nhẹ (~30MB)
+    container_name: redis_test_container
+    ports:
+      - "6379:6379" # Kéo port 6379 ra máy thật nếu bạn muốn dùng Redis Desktop Manager để check
+    volumes:
+      - redis_data:/data # Lưu dữ liệu Redis không bị mất khi restart container
 
   flask_backend:
     build: . # Docker sẽ tự tìm file Dockerfile ở cùng thư mục để build
@@ -25,10 +32,11 @@ services:
       - .:/app # Mount code từ máy thật vào container để khi bạn sửa code không cần build lại
     environment:
       - FLASK_ENV=development
-      # Cách để Flask kết nối với Postgres (Sử dụng tên service làm host)
       - DATABASE_URL=postgresql://postgres:ubuntu8s9reat@postgres_db:5432/test
     depends_on:
-      - postgres_db # Chờ container postgres chạy trước rồi mới bật Flask
+      - postgres_db
+      - redis_cache # Thêm Redis vào đây để Flask đợi cả Postgres và Redis chạy xong
 
 volumes:
   postgres_data:
+  redis_data: # Khai báo volume cho Redis ở cuối file

@@ -88,7 +88,7 @@ def get_user_from_account(account_id):
             customer_id = row1[0]
             
             query2 = """
-                SELECT customer_id, branch_id, full_name, identity_card, nationality, dob, city, address 
+                SELECT customer_id, branch_id, full_name, identity_card, nationality, dob, city, address, phone 
                 FROM customer WHERE customer_id = %s
             """
             cur.execute(query2, (customer_id,))

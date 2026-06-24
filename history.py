@@ -5,6 +5,27 @@ import history_db
 
 history_bp = Blueprint('history', __name__)
 
+@history_bp.route('/api/customer/history_all', methods=['GET'])
+@token_required
+def get_account_history_all(current_user): # current_user lấy tự động từ Token giống route cũ
+    try:
+        # Gọi hàm lấy toàn bộ lịch sử chi tiết từ history_db
+        data = history_db.get_all_history(current_user)
+        
+        return jsonify({
+            "status": "success",
+            "account_id": current_user,
+            "message": "Lấy toàn bộ lịch sử giao dịch chi tiết thành công",
+            "total_records": len(data), # Tiện thể đếm luôn tổng số lượng giao dịch trả về
+            "data": data
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": f"Đã xảy ra lỗi khi lấy lịch sử giao dịch: {str(e)}"
+        }), 500
+
 @history_bp.route('/api/customer/history', methods=['GET'])
 @token_required
 def get_account_history(current_user): # current_user lấy tự động từ Token
